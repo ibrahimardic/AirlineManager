@@ -3,6 +3,13 @@
 {%block content%}
 
 <h1>AIRLINES</h1>
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero exercitationem laudantium dolor vel eius accusantium eos facilis optio vero est expedita delectus consequuntur non, quibusdam iusto, magnam, corrupti soluta aliquam.</p>
+
+<ul>
+    {% for airline in airlines %}
+        <h2>
+            Name: <a href="/airline/{{airline.id}}">{{airline.name}}</a>
+        </h2>
+    {% endfor %}
+</ul>
 
 {%endblock content%}
