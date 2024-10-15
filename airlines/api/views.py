@@ -25,7 +25,7 @@ def AirlinesView(request):
         return Response(serializer.errors, status=400) # IF not valid
     
 
-@api_view(['GET', 'PATCH', 'POST'])
+@api_view(['GET', 'PATCH', 'DELETE'])
 def AirlineView(request,pk):
     if request.method == 'GET':
         airlineObj = Airline.objects.get(id=pk)
@@ -40,19 +40,19 @@ def AirlineView(request,pk):
             return Response(serializer.data)
         return Response(serializer.errors, status=400) # IF not valid
     
-    elif request.method == 'POST':
+    elif request.method == 'DELETE':
         airlineObj = Airline.objects.get(id=pk)
         airlineObj.delete()
         return Response(status=204) 
 
-@api_view(['GET','POST','PATCH'])
+@api_view(['GET','DELETE','PATCH'])
 def AirCraftView(request, pk):
     if request.method == 'GET':
         aircraftObj = Aircraft.objects.get(id=pk)
         serializer = AircraftSerializer(aircraftObj)
         return Response(serializer.data)
     
-    elif request.method == 'POST':
+    elif request.method == 'DELETE':
         aircraftObj = Aircraft.objects.get(id=pk)
         aircraftObj.delete()
         return Response(status=204)  # No content, no data returned
