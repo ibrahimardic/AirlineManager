@@ -4,12 +4,22 @@
 
 <h1>AIRLINES</h1>
 
-<ul>
+<table>
+    <tr>
+        <th>NAME</th>
+        <th>CALLSIGN</th>
+        <th>FOUNDED YEAR</th>
+        <th>BASE AIRPORT</th>
+    </tr>
     {% for airline in airlines %}
-        <h2>
-            Name: <a href="/airline/{{airline.id}}">{{airline.name}}</a>
-        </h2>
+    <tr>
+        <td>{{airline.name}}</td>
+        <td>{{airline.callsign}}</td>
+        <td>{{airline.founded_year}}</td>
+        <td>{{airline.base_airport}}</td>
+        <td><a href="/airline/{{airline.id}}">View</a></td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 
 {%endblock content%}

@@ -4,12 +4,25 @@
 
 <h1>AIRCRAFTS</h1>
 
-<ul>
+<table>
+    <tr>
+        <th>MODEL</th>
+        <th>TYPE</th>
+        <th>OPERATOR AIRLINE</th>
+        <th>NUMBER OF ENGINES</th>
+        <th></th>
+    </tr>
     {% for aircraft in aircrafts %}
-        <h2>
-            Name: <a href="/aircraft/{{aircraft.id}}">{{aircraft.model}}</a>
-        </h2>
+    <tr>
+
+        <td>{{aircraft.model}}</td>
+        <td>{{aircraft.type}}</td>
+        <td>{{aircraft.operator_airline}}</td>
+        <td>{{aircraft.number_of_engines}}</td>
+        <td><a href="/aircraft/{{aircraft.id}}">View</a></td>
+
+    </tr>
     {% endfor %}
-</ul>
+</table>
 
 {%endblock content%}
