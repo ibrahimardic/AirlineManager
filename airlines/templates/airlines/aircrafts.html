@@ -6,6 +6,7 @@
 
 <table>
     <tr>
+        <th>MSN</th>
         <th>MODEL</th>
         <th>TYPE</th>
         <th>OPERATOR AIRLINE</th>
@@ -14,11 +15,13 @@
     </tr>
     {% for aircraft in aircrafts %}
     <tr>
-
+        <td>{{aircraft.manufacturer_serial_number}}</td>
         <td>{{aircraft.model}}</td>
         <td>{{aircraft.type}}</td>
         <td>{{aircraft.operator_airline}}</td>
         <td>{{aircraft.number_of_engines}}</td>
+        <td><a href="/aircraft-delete/{{aircraft.id}}">Delete</a></td>
+        <td><a href="/aircraft-update/{{aircraft.id}}">Edit</a></td>
         <td><a href="/aircraft/{{aircraft.id}}">View</a></td>
 
     </tr>

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Aircraft, Airline
 from .forms import AirlineForm, AircraftForm
@@ -31,10 +31,73 @@ def ApiTokenAuth(request):
 
 def createAirline(request):
     airline_form = AirlineForm()
+
+    if request.method == 'POST':
+        form = AirlineForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('airlines')
+
     context = {'airline_form':airline_form}
     return render(request, "airlines/airline_form.html", context)
 
+def updateAirline(request,pk):
+    airline = Airline.objects.get(id=pk)
+
+    airline_form = AirlineForm(instance = airline)
+
+    if request.method == 'POST':
+        form = AirlineForm(request.POST, instance=airline)
+        if form.is_valid():
+            form.save()
+            return redirect('airlines')
+    
+    context = {'airline_form':airline_form}
+    return render(request, "airlines/airline_form.html", context)
+
+def deleteAirline(request,pk):
+    airline = Airline.objects.get(id=pk)
+
+    if request.method == 'POST':
+        airline.delete()
+        return redirect('airlines')
+
+    context = {'object': airline}
+    return render(request,'airlines/delete_template.html',context )
+
 def createAircraft(request):
     aircraft_form = AircraftForm()
+
+    if request.method == 'POST':
+        form = AircraftForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('aircrafts')
+
     context = {'aircraft_form':aircraft_form}
     return render(request, "airlines/aircraft_form.html", context)
+
+def updateAircraft(request, pk):
+    aircraft = Aircraft.objects.get(id=pk)
+
+    aircraft_form = AircraftForm(instance=aircraft)
+
+    if request.method == 'POST':
+        form = AircraftForm(request.POST, instance=aircraft)
+        if form.is_valid():
+            form.save()
+            return redirect('aircrafts')
+        
+    context = {'aircraft_form':aircraft_form}
+    return render(request, "airlines/aircraft_form.html", context)
+
+def deleteAircraft(request, pk):
+    aircraft = Aircraft.objects.get(id =pk)
+
+    if request.method == 'POST':
+        aircraft.delete()
+        return redirect('aircrafts')
+
+    context = {'object': aircraft}
+    return render(request,'airlines/delete_template.html',context )
+
