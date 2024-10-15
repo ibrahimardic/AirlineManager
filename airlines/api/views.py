@@ -1,30 +1,40 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Aircraft, Airline
-from .forms import AirlineForm, AircraftForm
+from airlines.models import Aircraft, Airline
+from airlines.forms import AirlineForm, AircraftForm
+from airlines.api.serializers import AircraftSerializer, AirlineSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 def Homepage(request):
     msg = 'Hello, you are on the homepage.'
     return render(request, 'airlines/homepage.html',{'message':msg})
 
+@api_view(['GET']) # Default is GET
 def AirlinesView(request):
     airlines = Airline.objects.all()
-    context = {'airlines': airlines}
-    return render(request, 'airlines/airlines.html', context)
+    serializer = AirlineSerializer(airlines, many=True)  # Ensure `many=True` for QuerySet serialization
+    return Response(serializer.data)
+    
 
-
+@api_view(['GET'])
 def AirlineView(request,pk):
     airlineObj = Airline.objects.get(id=pk)
-    return render(request, 'airlines/airline.html', {'airlineObj': airlineObj})
+    serializer = AirlineSerializer(airlineObj)
+    return Response(serializer.data)
 
+@api_view(['GET'])
 def AirCraftView(request, pk):
     aircraftObj = Aircraft.objects.get(id=pk)
-    return render(request, 'airlines/aircraft.html', {'aircraftObj':aircraftObj})
+    serializer = AircraftSerializer(aircraftObj)
+    return Response(serializer.data)
 
+@api_view(['GET'])
 def AirCraftsView(request):
     aircrafts = Aircraft.objects.all()
-    context = {'aircrafts': aircrafts}
-    return render(request, 'airlines/aircrafts.html', context)
+    serializer = AircraftSerializer(aircrafts, many=True)
+    return Response(serializer.data)
+    
 
 def ApiTokenAuth(request):
     return HttpResponse('Api Token Authorization ')
