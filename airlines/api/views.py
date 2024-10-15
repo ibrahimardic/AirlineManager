@@ -10,103 +10,76 @@ def Homepage(request):
     msg = 'Hello, you are on the homepage.'
     return render(request, 'airlines/homepage.html',{'message':msg})
 
-@api_view(['GET']) # Default is GET
+@api_view(['GET','POST']) # Default is GET
 def AirlinesView(request):
-    airlines = Airline.objects.all()
-    serializer = AirlineSerializer(airlines, many=True)  # Ensure `many=True` for QuerySet serialization
-    return Response(serializer.data)
+
+    if request.method == 'GET':
+        airlines = Airline.objects.all()
+        serializer = AirlineSerializer(airlines, many=True)  # Ensure `many=True` for QuerySet serialization
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = AirlineSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400) # IF not valid
     
 
-@api_view(['GET'])
+@api_view(['GET', 'PATCH', 'POST'])
 def AirlineView(request,pk):
-    airlineObj = Airline.objects.get(id=pk)
-    serializer = AirlineSerializer(airlineObj)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        airlineObj = Airline.objects.get(id=pk)
+        serializer = AirlineSerializer(airlineObj)
+        return Response(serializer.data)
+    
+    elif request.method == 'PATCH':
+        AirlineObj = Airline.objects.get(id=pk)
+        serializer = AirlineSerializer(AirlineObj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400) # IF not valid
+    
+    elif request.method == 'POST':
+        airlineObj = Airline.objects.get(id=pk)
+        airlineObj.delete()
+        return Response(status=204) 
 
-@api_view(['GET'])
+@api_view(['GET','POST','PATCH'])
 def AirCraftView(request, pk):
-    aircraftObj = Aircraft.objects.get(id=pk)
-    serializer = AircraftSerializer(aircraftObj)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        aircraftObj = Aircraft.objects.get(id=pk)
+        serializer = AircraftSerializer(aircraftObj)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        aircraftObj = Aircraft.objects.get(id=pk)
+        aircraftObj.delete()
+        return Response(status=204)  # No content, no data returned
+    
+    elif request.method == 'PATCH':
+        aircraftObj = Aircraft.objects.get(id=pk)
+        serializer = AircraftSerializer(aircraftObj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400) # IF not valid
+    
 
-@api_view(['GET'])
+
+@api_view(['GET', 'POST'])
 def AirCraftsView(request):
-    aircrafts = Aircraft.objects.all()
-    serializer = AircraftSerializer(aircrafts, many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        aircrafts = Aircraft.objects.all()
+        serializer = AircraftSerializer(aircrafts, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = AircraftSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400) # IF not valid    
     
 
 def ApiTokenAuth(request):
     return HttpResponse('Api Token Authorization ')
-
-def createAirline(request):
-    airline_form = AirlineForm()
-
-    if request.method == 'POST':
-        form = AirlineForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('airlines')
-
-    context = {'airline_form':airline_form}
-    return render(request, "airlines/airline_form.html", context)
-
-def updateAirline(request,pk):
-    airline = Airline.objects.get(id=pk)
-
-    airline_form = AirlineForm(instance = airline)
-
-    if request.method == 'POST':
-        form = AirlineForm(request.POST, instance=airline)
-        if form.is_valid():
-            form.save()
-            return redirect('airlines')
-    
-    context = {'airline_form':airline_form}
-    return render(request, "airlines/airline_form.html", context)
-
-def deleteAirline(request,pk):
-    airline = Airline.objects.get(id=pk)
-
-    if request.method == 'POST':
-        airline.delete()
-        return redirect('airlines')
-
-    context = {'object': airline}
-    return render(request,'airlines/delete_template.html',context )
-
-def createAircraft(request):
-    aircraft_form = AircraftForm()
-
-    if request.method == 'POST':
-        form = AircraftForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('aircrafts')
-
-    context = {'aircraft_form':aircraft_form}
-    return render(request, "airlines/aircraft_form.html", context)
-
-def updateAircraft(request, pk):
-    aircraft = Aircraft.objects.get(id=pk)
-
-    aircraft_form = AircraftForm(instance=aircraft)
-
-    if request.method == 'POST':
-        form = AircraftForm(request.POST, instance=aircraft)
-        if form.is_valid():
-            form.save()
-            return redirect('aircrafts')
-        
-    context = {'aircraft_form':aircraft_form}
-    return render(request, "airlines/aircraft_form.html", context)
-
-def deleteAircraft(request, pk):
-    aircraft = Aircraft.objects.get(id =pk)
-
-    if request.method == 'POST':
-        aircraft.delete()
-        return redirect('aircrafts')
-
-    context = {'object': aircraft}
-    return render(request,'airlines/delete_template.html',context )
