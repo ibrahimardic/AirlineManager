@@ -1,0 +1,12 @@
+{%extends 'layout.html' %}
+
+{%block content %}
+
+<h1>Airline Form</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{airline_form}}
+    <button type="submit">Submit</button>
+</form>
+{%endblock content%}

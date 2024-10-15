@@ -8,4 +8,6 @@ urlpatterns = [
     path('api-token-auth/', views.ApiTokenAuth, name="api-token-auth"), # api-token-auth
     path('airline/', views.AirlinesView, name="api-token-auth"),
     path('aircraft/', views.AirCraftsView, name="api-token-auth"),
+    path('airline-create/',views.createAirline,name = "create-airline" ),
+    path('aircraft-create/', views.createAircraft, name="create-aircraft")
 ]

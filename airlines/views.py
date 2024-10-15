@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Aircraft, Airline
+from .forms import AirlineForm, AircraftForm
 
 def Homepage(request):
     msg = 'Hello, you are on the homepage.'
@@ -27,3 +28,13 @@ def AirCraftsView(request):
 
 def ApiTokenAuth(request):
     return HttpResponse('Api Token Authorization ')
+
+def createAirline(request):
+    airline_form = AirlineForm()
+    context = {'airline_form':airline_form}
+    return render(request, "airlines/airline_form.html", context)
+
+def createAircraft(request):
+    aircraft_form = AircraftForm()
+    context = {'aircraft_form':aircraft_form}
+    return render(request, "airlines/aircraft_form.html", context)
