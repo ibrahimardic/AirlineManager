@@ -4,13 +4,15 @@ from airlines.models import Aircraft, Airline
 from airlines.forms import AirlineForm, AircraftForm
 from airlines.api.serializers import AircraftSerializer, AirlineSerializer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 def Homepage(request):
     msg = 'You are on the homepage.'
     return render(request, 'airlines/homepage.html',{'message':msg})
 
 @api_view(['GET','POST']) # Default is GET
+@permission_classes([IsAuthenticated])
 def AirlinesView(request):
 
     if request.method == 'GET':
@@ -26,6 +28,7 @@ def AirlinesView(request):
     
 
 @api_view(['GET', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def AirlineView(request,pk):
     if request.method == 'GET':
         airlineObj = Airline.objects.get(id=pk)
@@ -37,7 +40,7 @@ def AirlineView(request,pk):
         serializer = AirlineSerializer(AirlineObj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=201)
+            return Response(serializer.data, status=200)
         return Response(serializer.errors, status=400) # IF not valid
     
     elif request.method == 'DELETE':
@@ -46,6 +49,7 @@ def AirlineView(request,pk):
         return Response(status=204) 
 
 @api_view(['GET','DELETE','PATCH'])
+@permission_classes([IsAuthenticated])
 def AirCraftView(request, pk):
     if request.method == 'GET':
         aircraftObj = Aircraft.objects.get(id=pk)
@@ -62,12 +66,13 @@ def AirCraftView(request, pk):
         serializer = AircraftSerializer(aircraftObj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=201)
+            return Response(serializer.data, status=200)
         return Response(serializer.errors, status=400) # IF not valid
     
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def AirCraftsView(request):
     if request.method == 'GET':
         aircrafts = Aircraft.objects.all()

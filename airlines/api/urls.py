@@ -1,13 +1,20 @@
 from django.urls import path
 from . import views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 urlpatterns = [
     path('', views.Homepage, name="homepage"), # Root domain
     path('airline/<str:pk>/', views.AirlineView, name="airline"), # airline listing
     path('aircraft/<str:pk>/', views.AirCraftView, name="aircraft"), # aircraft listing
-    path('api-token-auth/', views.ApiTokenAuth, name="api-token-auth"), # api-token-auth
     path('airline/', views.AirlinesView, name="airlines"),
     path('aircraft/', views.AirCraftsView, name="aircrafts"),
+    path('api-token-auth/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Refresh token
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),  # Verify token
     # path('airline-create/',views.createAirline,name = "create-airline" ),
     # path('aircraft-create/', views.createAircraft, name="create-aircraft"),
     # path('airline-update/<str:pk>/', views.updateAirline,name="update-airline" ),
