@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 def Homepage(request):
-    msg = 'Hello, you are on the homepage.'
+    msg = 'You are on the homepage.'
     return render(request, 'airlines/homepage.html',{'message':msg})
 
 @api_view(['GET','POST']) # Default is GET
@@ -16,7 +16,7 @@ def AirlinesView(request):
     if request.method == 'GET':
         airlines = Airline.objects.all()
         serializer = AirlineSerializer(airlines, many=True)  # Ensure `many=True` for QuerySet serialization
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
     elif request.method == 'POST':
         serializer = AirlineSerializer(data=request.data)
         if serializer.is_valid():
@@ -30,14 +30,14 @@ def AirlineView(request,pk):
     if request.method == 'GET':
         airlineObj = Airline.objects.get(id=pk)
         serializer = AirlineSerializer(airlineObj)
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
     
     elif request.method == 'PATCH':
         AirlineObj = Airline.objects.get(id=pk)
         serializer = AirlineSerializer(AirlineObj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400) # IF not valid
     
     elif request.method == 'DELETE':
@@ -50,7 +50,7 @@ def AirCraftView(request, pk):
     if request.method == 'GET':
         aircraftObj = Aircraft.objects.get(id=pk)
         serializer = AircraftSerializer(aircraftObj)
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
     
     elif request.method == 'DELETE':
         aircraftObj = Aircraft.objects.get(id=pk)
@@ -62,7 +62,7 @@ def AirCraftView(request, pk):
         serializer = AircraftSerializer(aircraftObj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400) # IF not valid
     
 
@@ -72,7 +72,7 @@ def AirCraftsView(request):
     if request.method == 'GET':
         aircrafts = Aircraft.objects.all()
         serializer = AircraftSerializer(aircrafts, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
     elif request.method == 'POST':
         serializer = AircraftSerializer(data=request.data)
         if serializer.is_valid():
