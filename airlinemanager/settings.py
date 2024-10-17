@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist', # Optional for token management
 ]
 
+SIMPLE_JWT = {
+    'BLACKLIST_AFTER_ROTATION': True,
+} # To handle user logout. 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -135,3 +139,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',  # Optional, require authentication by default
     ),
 }
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
